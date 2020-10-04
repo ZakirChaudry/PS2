@@ -1,5 +1,6 @@
 ---
 title: "Problem Set 2"
+title: "Yukon elections are relevant"
 author: "Zakir Chaudry"
 date: "10/3/2020"
 output: html_document
