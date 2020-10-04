@@ -1,0 +1,62 @@
+---
+title: "Problem Set 2"
+author: "Zakir Chaudry"
+date: "10/3/2020"
+output: html_document
+---
+Resources Used: https://electionsyukon.ca/sites/elections/files/english_website_2016_election_report_1.56.55_pm.pdf
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+set.seed(10)
+library(splitstackshape)
+```
+
+## Creating the total population dataset
+We will generate an equal number of responses to that of the voting population of Yukon, while also categorizing by electoral district to support our sampling via Stratified Random Sampling later.
+```{r Creating Potential Values}
+District_Names <- c("Copperbelt North", "Copperbelt South", "Klondike", "Kluane", "Lake Laberge", "Mayo-Tatchun", "Mount Lorne-Southern Lakes", "Mountainview", "Pelly-Nisutlin", "Porter Creek Centre", "Porter Creek North", "Porter Creek South", "Riverdale North", "Riverdale South", "Takhini-Kopper King", "Vuntut Gwitchin", "Watson Lake", "Whitehorse Centre", "Whitehorse West")
+District_Elegible_Voters <- c(1684, 1510, 1399, 927, 1497, 1044, 1522, 1537, 836, 1379, 1546, 890, 1413, 1471, 1904, 175, 936, 1640, 1368)
+Gender_Values <- c("Male", "Female", "Other", "Prefer Not To Say")
+Education_Values <- c("No Schooling", "Less than High School Graduate", "High School Graduate or Equivalent", "Some Post-Secondary", "Post-Secondary Degree", "Masters/PhD or equivalent", "Prefer Not to Say")
+Sexual_Preference_Values <- c("Heterosexual", "Homosexual", "Bisexual", "Other", "Prefer Not to Say")
+Income_Values <- c("<$20,000", "$20,000 to $39,999", "$40,000 to $59,999", "$60,000 to $79,999", "$80,000 to $100,000", ">$100,000")
+Voting_Values <- c("Yes", "No", "Unsure")
+Important_Policy_Values <- c("Policy 1", "Policy 2", "Policy 3", "Other")
+Party_Values <- c("Independent", "Yukon Green Party", "Yukon Liberal Party", "Yukon New Democratic Party", "Yukon Party")
+
+Party_Prev <- c(rep(0,Elegible_Voters))
+```
+
+```{r Create The Total Population}
+# Creating Districts based off of elegible voters per district
+Districts <- c()
+
+for (district in 1:length(District_Names)) {
+  Districts <- append(Districts, rep(District_Names[district], District_Elegible_Voters[district]))
+}
+
+Genders <- sample(Gender_Values, Elegible_Voters, replace = TRUE)
+Education <- sample(Education_Values, Elegible_Voters, replace = TRUE)
+Sexual_Preferences <- sample(Sexual_Preference_Values, Elegible_Voters, replace = TRUE)
+Income <- sample(Income_Values, Elegible_Voters, replace = TRUE)
+Voting <- sample(Voting_Values, Elegible_Voters, replace = TRUE)
+Policy <- sample(Important_Policy_Values, Elegible_Voters, replace = TRUE)
+Satisfaction <- sample(1:10, Elegible_Voters, replace = TRUE)
+Confidence <- sample(1:10, Elegible_Voters, replace = TRUE)
+Party_Voting <- sample(Party_Values, Elegible_Voters, replace = TRUE)
+Party_Prev <- sample(Party_Values, Elegible_Voters, replace = TRUE)
+
+Data <- data.frame(Districts, Genders, Education, Sexual_Preferences, Income, Voting, Policy, Satisfaction, Confidence, Party_Voting, Party_Prev)
+
+```
+
+```{r Sampling via SRSWOR}
+SRSWOR_Rows <- sample(nrow(Data), Elegible_Voters/10)
+SRSWOR_Sample <- Data[SRSWOR_Sample, ]
+```
+
+```{r Sampling via StRS}
+StRS_Sample <- stratified(Data, "Districts", .1)
+```
+
