@@ -23,14 +23,12 @@ Education_Values <- c("No Schooling", "Less than High School Graduate", "High Sc
 Sexual_Preference_Values <- c("Heterosexual", "Homosexual", "Bisexual", "Other", "Prefer Not to Say")
 Income_Values <- c("<$20,000", "$20,000 to $39,999", "$40,000 to $59,999", "$60,000 to $79,999", "$80,000 to $100,000", ">$100,000")
 Voting_Values <- c("Yes", "No", "Unsure")
-Important_Policy_Values <- c("Policy 1", "Policy 2", "Policy 3", "Other")
+Important_Policy_Values <- c("Environment", "Economy", "Education", "Employment", "Other")
 Party_Values <- c("Independent", "Yukon Green Party", "Yukon Liberal Party", "Yukon New Democratic Party", "Yukon Party")
-
-Party_Prev <- c(rep(0,Elegible_Voters))
 ```
 
 ```{r Create The Total Population}
-# Creating Districts based off of elegible voters per district
+# Creating Districts based off of eligible voters per district
 Districts <- c()
 
 for (district in 1:length(District_Names)) {
