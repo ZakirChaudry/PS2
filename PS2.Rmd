@@ -11,12 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 set.seed(10)
 library(splitstackshape)
 ```
+## Executive Summary
 
-## Creating the total population dataset
+## Survey Content
+
+## Introduction
+
+
+## Simulation
 We will generate an equal number of responses to that of the voting population of Yukon, while also categorizing by electoral district to support our sampling via Stratified Random Sampling later.
 ```{r Creating Potential Values}
 District_Names <- c("Copperbelt North", "Copperbelt South", "Klondike", "Kluane", "Lake Laberge", "Mayo-Tatchun", "Mount Lorne-Southern Lakes", "Mountainview", "Pelly-Nisutlin", "Porter Creek Centre", "Porter Creek North", "Porter Creek South", "Riverdale North", "Riverdale South", "Takhini-Kopper King", "Vuntut Gwitchin", "Watson Lake", "Whitehorse Centre", "Whitehorse West")
-District_Elegible_Voters <- c(1684, 1510, 1399, 927, 1497, 1044, 1522, 1537, 836, 1379, 1546, 890, 1413, 1471, 1904, 175, 936, 1640, 1368)
+District_Eligible_Voters <- c(1684, 1510, 1399, 927, 1497, 1044, 1522, 1537, 836, 1379, 1546, 890, 1413, 1471, 1904, 175, 936, 1640, 1368)
 Gender_Values <- c("Male", "Female", "Other", "Prefer Not To Say")
 Education_Values <- c("No Schooling", "Less than High School Graduate", "High School Graduate or Equivalent", "Some Post-Secondary", "Post-Secondary Degree", "Masters/PhD or equivalent", "Prefer Not to Say")
 Sexual_Preference_Values <- c("Heterosexual", "Homosexual", "Bisexual", "Other", "Prefer Not to Say")
@@ -58,3 +64,13 @@ SRSWOR_Sample <- Data[SRSWOR_Sample, ]
 StRS_Sample <- stratified(Data, "Districts", .1)
 ```
 
+## Shortcomings and biases
+
+
+## Survey Methodology
+
+
+## Findings
+
+
+## References
