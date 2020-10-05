@@ -1,5 +1,5 @@
 ---
-title: "Yukon elections are relevant"
+title: "Comparing Choice of Party to Voter Demographics in Yukon through Surveying and Stratified Random Sampling"
 author: "Zakir Chaudry"
 date: "10/3/2020"
 output: html_document
@@ -96,12 +96,13 @@ average_confidence <- voters %>% group_by(Party_Voting) %>% summarise(avg = mean
 average_confidence
 ```
 ```{r Party}
-party_by_district <- ggplot(voters %>% count(Districts, Party_Voting), aes(x = Districts, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by District", caption = "Figure 5", x = "District", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+party_by_district <- ggplot(voters %>% count(Districts, Party_Voting), aes(x = Districts, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by District", caption = "Figure 5", x = "District", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
 party_by_district
 ```
 ```{r Education}
-party_by_district <- ggplot(voters %>% count(Education, Party_Voting), aes(x = Education, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by Highest Level of Education", caption = "Figure 6", x = "Highest Level of Education", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-party_by_district
+voters$Education <- factor(voters$Education, levels = Education_Values)
+party_by_education <- ggplot(voters %>% count(Education, Party_Voting), aes(x = Education, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by Highest Level of Education", caption = "Figure 6", x = "Highest Level of Education", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
+party_by_education
 ```
 
 ## Shortcomings and biases
