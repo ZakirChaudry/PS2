@@ -4,8 +4,14 @@ author: "Zakir Chaudry"
 date: "10/3/2020"
 output: html_document
 ---
-Resources Used: https://electionsyukon.ca/sites/elections/files/english_website_2016_election_report_1.56.55_pm.pdf
+Resources Used: 
+https://electionsyukon.ca/sites/elections/files/english_website_2016_election_report_1.56.55_pm.pdf
+
 https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/prof/details/Page.cfm?Lang=E&Geo1=PR&Code1=60&Geo2=&Code2=&SearchText=Yukon&SearchType=Begins&SearchPR=01&B1=All&GeoLevel=PR&GeoCode=60&type=0
+
+https://www.statcan.gc.ca/eng/dai/smr08/2015/smr08_203_2015#a1
+
+https://www.yukon-news.com/news/yukon-voter-turnout-second-highest-in-the-country/
 
 
 ```{r setup, include=FALSE}
@@ -45,15 +51,15 @@ for (district in 1:length(District_Names)) {
 Eligible_Voters <- sum(District_Eligible_Voters)
 
 Genders <- sample(Gender_Values, Eligible_Voters, replace = TRUE, prob = c(0.502, 0.496, 0.001, 0.001))
-Education <- sample(Education_Values, Eligible_Voters, replace = TRUE, prob = c( ))
-Sexual_Preferences <- sample(Sexual_Preference_Values, Eligible_Voters, replace = TRUE)
-Income <- sample(Income_Values, Eligible_Voters, replace = TRUE, prob = c())
-Voting <- sample(Voting_Values, Eligible_Voters, replace = TRUE)
+Education <- sample(Education_Values, Eligible_Voters, replace = TRUE, prob = c(0.17, 0.23, 0.5, 0.1))
+Sexual_Preferences <- sample(Sexual_Preference_Values, Eligible_Voters, replace = TRUE, prob = c(0.96, 0.017, 0.013, 0.01))
+Income <- sample(Income_Values, Eligible_Voters, replace = TRUE, prob = c(0.2, 0.2, 0.15, 0.15, 0.1, 0.1))
+Voting <- sample(Voting_Values, Eligible_Voters, replace = TRUE, prob = c(0.76, 0.14, 0.1))
 Policy <- sample(Important_Policy_Values, Eligible_Voters, replace = TRUE)
 Satisfaction <- sample(1:10, Eligible_Voters, replace = TRUE)
 Confidence <- sample(1:10, Eligible_Voters, replace = TRUE)
-Party_Voting <- sample(Party_Values, Eligible_Voters, replace = TRUE)
-Party_Prev <- sample(Party_Values, Eligible_Voters, replace = TRUE)
+Party_Voting <- sample(Party_Values, Eligible_Voters, replace = TRUE, prob = c(0.01, 0.04, 0.4, 0.25, 0.33))
+Party_Prev <- sample(Party_Values, Eligible_Voters, replace = TRUE, prob = c(0.01, 0.04, 0.4, 0.25, 0.33))
 
 Data <- data.frame(Districts, Genders, Education, Sexual_Preferences, Income, Voting, Policy, Satisfaction, Confidence, Party_Voting, Party_Prev)
 
