@@ -18,6 +18,9 @@ https://www.yukon-news.com/news/yukon-voter-turnout-second-highest-in-the-countr
 knitr::opts_chunk$set(echo = TRUE)
 set.seed(10)
 library(splitstackshape)
+library(dplyr)
+library(ggplot2)
+library(scales)
 ```
 ## Executive Summary
 
@@ -51,8 +54,8 @@ for (district in 1:length(District_Names)) {
 Eligible_Voters <- sum(District_Eligible_Voters)
 
 Genders <- sample(Gender_Values, Eligible_Voters, replace = TRUE, prob = c(0.502, 0.496, 0.001, 0.001))
-Education <- sample(Education_Values, Eligible_Voters, replace = TRUE, prob = c(0.17, 0.23, 0.5, 0.1))
-Sexual_Preferences <- sample(Sexual_Preference_Values, Eligible_Voters, replace = TRUE, prob = c(0.96, 0.017, 0.013, 0.01))
+Education <- sample(Education_Values, Eligible_Voters, replace = TRUE, prob = c(0.17, 0.23, 0.5, 0.1, 0.05))
+Sexual_Preferences <- sample(Sexual_Preference_Values, Eligible_Voters, replace = TRUE, prob = c(0.96, 0.017, 0.013, 0.05, 0.05))
 Income <- sample(Income_Values, Eligible_Voters, replace = TRUE, prob = c(0.2, 0.2, 0.15, 0.15, 0.1, 0.1))
 Voting <- sample(Voting_Values, Eligible_Voters, replace = TRUE, prob = c(0.76, 0.14, 0.1))
 Policy <- sample(Important_Policy_Values, Eligible_Voters, replace = TRUE)
@@ -67,11 +70,38 @@ Data <- data.frame(Districts, Genders, Education, Sexual_Preferences, Income, Vo
 
 ```{r Sampling via SRSWOR}
 SRSWOR_Rows <- sample(nrow(Data), Eligible_Voters/10)
-SRSWOR_Sample <- Data[SRSWOR_Sample, ]
+SRSWOR_Sample <- slice(Data, SRSWOR_Rows)
 ```
 
 ```{r Sampling via StRS}
 StRS_Sample <- stratified(Data, "Districts", .1)
+```
+## Graphs
+
+```{r Votes}
+voters <- filter(StRS_Sample, Voting == "Yes")
+votes <- voters %>% ggplot(aes(x = Party_Voting)) + geom_bar(aes(y = (..count..)/sum(..count..))) + labs(title = "The Party of Choice Among Voters in Yukon", caption = "Figure 1", x = "Party of Choice", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
+votes
+```
+```{r policies}
+policies <- ggplot(voters %>% count(Party_Voting, Policy) %>% mutate(pct = n/sum(n)), aes(x = Party_Voting, y = n, fill = Policy)) + geom_bar(stat="identity", position = "fill") + labs(title = "Most Important Policy Among Voters in Yukon Compared to Party of Choice", caption = "Figure 2", x = "Party of Choice", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
+policies
+```
+```{r Satisfaction}
+average_satisfaction <- voters %>% group_by(Party_Voting) %>% summarise(avg = mean(Satisfaction)) %>% ggplot(aes(x = Party_Voting, y = avg)) + geom_bar(stat = "identity") + labs(title = "Satisfaction with the Yukon Liberal Party Among Voters by Party of Choice", caption = "Figure 3", x = "Party of Choice", y= "Satisfaction") + ylim(0,10) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
+average_satisfaction
+```
+```{r Confidence}
+average_confidence <- voters %>% group_by(Party_Voting) %>% summarise(avg = mean(Confidence)) %>% ggplot(aes(x = Party_Voting, y = avg)) + geom_bar(stat = "identity") + labs(title = "Confidence for the Yukon Liberal Party Among Voters by Party of Choice", caption = "Figure 4", x = "Party of Choice", y= "Confidence") + ylim(0,10) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
+average_confidence
+```
+```{r Party}
+party_by_district <- ggplot(voters %>% count(Districts, Party_Voting), aes(x = Districts, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by District", caption = "Figure 5", x = "District", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+party_by_district
+```
+```{r Education}
+party_by_district <- ggplot(voters %>% count(Education, Party_Voting), aes(x = Education, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by Highest Level of Education", caption = "Figure 6", x = "Highest Level of Education", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+party_by_district
 ```
 
 ## Shortcomings and biases
