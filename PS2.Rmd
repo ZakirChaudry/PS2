@@ -1,6 +1,5 @@
 ---
-title: Analyzing Voter Demographics in Yukon through Surveying
-  and Stratified Random Sampling
+title: Analyzing Voter Demographics in Yukon through Surveying and Stratified Random Sampling
 author: "Zakir Chaudry, Ankhee Paul, Shupeng Chen, Yi Peng Chang"
 date: "10/07/2020"
 bibliography: references.bib
@@ -235,6 +234,8 @@ We are certain that the information obtained from these findings will be of grea
 ## Shortcomings and biases
 
 Assuming that nobody lies on survey for the sake of the laptop, there are multiple weaknesses which might lead to inconclusive results. There is an inevitable problem of missing data as people may choose not to answer specific questions or take the survey, invalidating generalization to the population. Additionally, the method of distribution remains insufficient to reach every single inhabitant of the province, depriving us of valuable information/data. By trying to reach everyone through their phones, there might arise the problem of overlapping information as respondents could possess multiple phone numbers. External factors (or lurking variables) such as the economic conditions caused by the current pandemic, and policies considered personally irrelevant amongst the sample, can lead to biased answers against the party. Moreover, respondents can find the survey tedious due to its length, rendering inaccurate and unfavorable answers.
+
+Code and data supporting this analysis is available at https://github.com/ZakirChaudry/PS2/
 
 ## Appendix
 
