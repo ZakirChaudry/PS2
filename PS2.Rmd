@@ -1,5 +1,5 @@
 ---
-title: Comparing Choice of Party to Voter Demographics in Yukon through Surveying
+title: Analyzing Voter Demographics in Yukon through Surveying
   and Stratified Random Sampling
 author: "Zakir Chaudry, Ankhee Paul, Shupeng Chen, Yi Peng Chang"
 date: "10/07/2020"
