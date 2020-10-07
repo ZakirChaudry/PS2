@@ -24,14 +24,11 @@ library(scales)
 ```
 ## Executive Summary
 
-## Survey Content
 
 ## Introduction
 
 
-## Simulation
-We will generate an equal number of responses to that of the voting population of Yukon, while also categorizing by electoral district to support our sampling via Stratified Random Sampling later.
-```{r Creating Potential Values}
+```{r Creating Potential Values, echo=FALSE}
 District_Names <- c("Copperbelt North", "Copperbelt South", "Klondike", "Kluane", "Lake Laberge", "Mayo-Tatchun", "Mount Lorne-Southern Lakes", "Mountainview", "Pelly-Nisutlin", "Porter Creek Centre", "Porter Creek North", "Porter Creek South", "Riverdale North", "Riverdale South", "Takhini-Kopper King", "Vuntut Gwitchin", "Watson Lake", "Whitehorse Centre", "Whitehorse West")
 District_Eligible_Voters <- c(1684, 1510, 1399, 927, 1497, 1044, 1522, 1537, 836, 1379, 1546, 890, 1413, 1471, 1904, 175, 936, 1640, 1368)
 Gender_Values <- c("Male", "Female", "Other", "Prefer Not To Say")
@@ -43,7 +40,7 @@ Important_Policy_Values <- c("Environment", "Economy", "Education", "Employment"
 Party_Values <- c("Independent", "Yukon Green Party", "Yukon Liberal Party", "Yukon New Democratic Party", "Yukon Party")
 ```
 
-```{r Create The Total Population}
+```{r Create The Total Population, echo=FALSE}
 # Creating Districts based off of eligible voters per district
 Districts <- c()
 
@@ -68,41 +65,75 @@ Data <- data.frame(Districts, Genders, Education, Sexual_Preferences, Income, Vo
 
 ```
 
-```{r Sampling via SRSWOR}
+```{r Sampling via SRSWOR, echo=FALSE}
 SRSWOR_Rows <- sample(nrow(Data), Eligible_Voters/10)
 SRSWOR_Sample <- slice(Data, SRSWOR_Rows)
 ```
 
-```{r Sampling via StRS}
+```{r Sampling via StRS, echo=FALSE}
 StRS_Sample <- stratified(Data, "Districts", .1)
 ```
 ## Graphs
 
-```{r Votes}
+```{r Votes, echo=FALSE}
 voters <- filter(StRS_Sample, Voting == "Yes")
 votes <- voters %>% ggplot(aes(x = Party_Voting)) + geom_bar(aes(y = (..count..)/sum(..count..))) + labs(title = "The Party of Choice Among Voters in Yukon", caption = "Figure 1", x = "Party of Choice", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
 votes
 ```
-```{r policies}
+```{r policies, echo=FALSE}
 policies <- ggplot(voters %>% count(Party_Voting, Policy) %>% mutate(pct = n/sum(n)), aes(x = Party_Voting, y = n, fill = Policy)) + geom_bar(stat="identity", position = "fill") + labs(title = "Most Important Policy Among Voters in Yukon Compared to Party of Choice", caption = "Figure 2", x = "Party of Choice", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
 policies
 ```
-```{r Satisfaction}
+```{r Satisfaction, echo=FALSE}
 average_satisfaction <- voters %>% group_by(Party_Voting) %>% summarise(avg = mean(Satisfaction)) %>% ggplot(aes(x = Party_Voting, y = avg)) + geom_bar(stat = "identity") + labs(title = "Satisfaction with the Yukon Liberal Party Among Voters by Party of Choice", caption = "Figure 3", x = "Party of Choice", y= "Satisfaction") + ylim(0,10) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
 average_satisfaction
 ```
-```{r Confidence}
+```{r Confidence, echo=FALSE}
 average_confidence <- voters %>% group_by(Party_Voting) %>% summarise(avg = mean(Confidence)) %>% ggplot(aes(x = Party_Voting, y = avg)) + geom_bar(stat = "identity") + labs(title = "Confidence for the Yukon Liberal Party Among Voters by Party of Choice", caption = "Figure 4", x = "Party of Choice", y= "Confidence") + ylim(0,10) + scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
 average_confidence
 ```
-```{r Party}
-party_by_district <- ggplot(voters %>% count(Districts, Party_Voting), aes(x = Districts, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by District", caption = "Figure 5", x = "District", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
+```{r Party, echo=FALSE}
+party_by_district <- ggplot(voters %>% count(Districts, Party_Voting), aes(x = Districts, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by District", caption = "Figure 5", x = "District", y= "Percentage of Voters") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
 party_by_district
 ```
-```{r Education}
+```{r Income by District, echo=FALSE}
+voters$Income <- factor(voters$Income, levels = Income_Values)
+income_by_district <- ggplot(voters %>% count(Districts, Income), aes(x = Districts, y = n, fill = Income)) + geom_bar(stat="identity", position = "fill") + labs(title = "Income Among Voters in Yukon by District", caption = "Figure 6", x = "District", y= "Percentage of Voters") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
+income_by_district
+```
+```{r Satisfaction by district, echo=FALSE}
+satisfaction_by_district <- voters %>% group_by(Districts) %>% summarise(avg = mean(Satisfaction)) %>% ggplot(aes(x = Districts, y = avg)) + geom_bar(stat = "identity") + labs(title = "Satisfaction with the Yukon Liberal Party Among Voters by District", caption = "Figure 7", x = "District", y= "Satisfaction") + ylim(0,10) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
+satisfaction_by_district
+```
+
+```{r Education, echo=FALSE}
 voters$Education <- factor(voters$Education, levels = Education_Values)
-party_by_education <- ggplot(voters %>% count(Education, Party_Voting), aes(x = Education, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by Highest Level of Education", caption = "Figure 6", x = "Highest Level of Education", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
+party_by_education <- ggplot(voters %>% count(Education, Party_Voting), aes(x = Education, y = n, fill = Party_Voting)) + geom_bar(stat="identity", position = "fill") + labs(title = "Party Voted for Among Voters in Yukon by Highest Level of Education", caption = "Figure 8", x = "Highest Level of Education", y= "Percentage of Votes") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
 party_by_education
+```
+```{r Education by District, echo=FALSE}
+education_by_district <- ggplot(voters %>% count(Districts, Education), aes(x = Districts, y = n, fill = Education)) + geom_bar(stat="identity", position = "fill") + labs(title = "Highest Level of Education Among Voters in Yukon by District", caption = "Figure 9", x = "District", y= "Percentage of Voters") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
+education_by_district
+```
+```{r Policy by District, echo=FALSE}
+Policy_by_district <- ggplot(voters %>% count(Districts, Policy), aes(x = Districts, y = n, fill = Policy)) + geom_bar(stat="identity", position = "fill") + labs(title = "Most Important Policy Among Voters in Yukon by District", caption = "Figure 10", x = "District", y= "Percentage of Voters") + scale_y_continuous(labels = percent) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), aspect.ratio = 1/2)
+Policy_by_district
+```
+```{r Gender by District, echo=FALSE}
+Gender_by_district <- ggplot(voters %>% count(Districts, Genders), aes(x = Districts, y = n, fill = Genders)) + 
+  geom_bar(stat = "identity", position="fill") + 
+  labs(title = "Gender Among Voters in Yukon by District", caption = "Figure 11", x = "District", y= "Percentage of Voters") +    
+  scale_y_continuous(labels = percent) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+Gender_by_district
+```
+```{r Gender by Party, echo=FALSE}
+Gender_by_party <- ggplot(voters %>% count(Party_Voting, Genders), aes(x = Party_Voting, y = n, fill = Genders)) + 
+  geom_bar(stat = "identity", position="fill") + 
+  labs(title = "Gender Among Voters in Yukon by Party of Choice", caption = "Figure 12", x = "Party", y= "Percentage of Voters") +    
+  scale_y_continuous(labels = percent) + 
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) + theme_light()
+Gender_by_party
 ```
 
 ## Shortcomings and biases
