@@ -7,7 +7,6 @@ bibliography: references.bib
 nocite: '@*'
 output:
   pdf_document: default
-  html_document: default
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -80,11 +79,13 @@ Party_Prev <- sample(Party_Values, Eligible_Voters, replace = TRUE, prob = c(0.0
 Data <- data.frame(Districts, Genders, Education, Sexual_Preferences, Income, Voting, Policy, Satisfaction, Confidence, Party_Voting, Party_Prev)
 
 ```
+
 ```{r Sampling via SRSWOR, echo=FALSE}
 #SRSWOR sample with 10% of voters. Unused ultimately, but left for reference
 SRSWOR_Rows <- sample(nrow(Data), Eligible_Voters/10)
 SRSWOR_Sample <- slice(Data, SRSWOR_Rows)
 ```
+
 ```{r Sampling via StRS, echo=FALSE}
 #StRS sample with 10% of each district
 StRS_Sample <- stratified(Data, "Districts", .1)
@@ -103,6 +104,7 @@ votes <- voters %>% ggplot(aes(x = Party_Voting)) +
   theme_light()
 votes
 ```
+
 ```{r policies, echo=FALSE}
 policies <- ggplot(voters %>% count(Party_Voting, Policy), aes(x = Party_Voting, y = n, fill = Policy)) + #fills according to each policy
   geom_bar(stat="identity", position = "fill") + #creating the stacked bar graph
@@ -112,6 +114,7 @@ policies <- ggplot(voters %>% count(Party_Voting, Policy), aes(x = Party_Voting,
   theme_light()
 policies
 ```
+
 ```{r Satisfaction, echo=FALSE, message=FALSE, warning=FALSE}
 average_satisfaction <- 
   #creates new variable avg representing average satisfaction for each party voted for
@@ -124,6 +127,7 @@ average_satisfaction <-
   theme_light()
 average_satisfaction
 ```
+
 ```{r Confidence, echo=FALSE, message=FALSE, warning=FALSE}
 average_confidence <- 
   voters %>% group_by(Party_Voting) %>% summarise(avg = mean(Confidence)) %>% 
@@ -135,6 +139,7 @@ average_confidence <-
   theme_light()
 average_confidence
 ```
+
 ```{r Party, echo=FALSE}
 party_by_district <- ggplot(voters %>% count(Districts, Party_Voting), aes(x = Districts, y = n, fill = Party_Voting)) + 
   geom_bar(stat="identity", position = "fill") + 
@@ -144,6 +149,7 @@ party_by_district <- ggplot(voters %>% count(Districts, Party_Voting), aes(x = D
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
 party_by_district
 ```
+
 ```{r Income by District, echo=FALSE}
 voters$Income <- factor(voters$Income, levels = Income_Values) #reorders the income so that the graph will display them in order
 income_by_district <- ggplot(voters %>% count(Districts, Income), aes(x = Districts, y = n, fill = Income)) + 
@@ -153,6 +159,7 @@ income_by_district <- ggplot(voters %>% count(Districts, Income), aes(x = Distri
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 income_by_district
 ```
+
 ```{r Satisfaction by district, echo=FALSE, message=FALSE, warning=FALSE}
 satisfaction_by_district <- 
   voters %>% group_by(Districts) %>% summarise(avg = mean(Satisfaction)) %>% 
@@ -163,6 +170,7 @@ satisfaction_by_district <-
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 satisfaction_by_district
 ```
+
 ```{r Education, echo=FALSE}
 voters$Education <- factor(voters$Education, levels = Education_Values)
 party_by_education <- ggplot(voters %>% count(Education, Party_Voting), aes(x = Education, y = n, fill = Party_Voting)) + 
@@ -171,6 +179,7 @@ party_by_education <- ggplot(voters %>% count(Education, Party_Voting), aes(x = 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 party_by_education
 ```
+
 ```{r Education by District, echo=FALSE}
 education_by_district <- ggplot(voters %>% count(Districts, Education), aes(x = Districts, y = n, fill = Education)) + 
   geom_bar(stat="identity", position = "fill") + 
@@ -179,6 +188,7 @@ education_by_district <- ggplot(voters %>% count(Districts, Education), aes(x = 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 education_by_district
 ```
+
 ```{r Policy by District, echo=FALSE}
 Policy_by_district <- ggplot(voters %>% count(Districts, Policy), aes(x = Districts, y = n, fill = Policy)) + 
   geom_bar(stat="identity", position = "fill") + 
@@ -187,6 +197,7 @@ Policy_by_district <- ggplot(voters %>% count(Districts, Policy), aes(x = Distri
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 Policy_by_district
 ```
+
 ```{r Gender by District, echo=FALSE}
 Gender_by_district <- ggplot(voters %>% count(Districts, Genders), aes(x = Districts, y = n, fill = Genders)) + 
   geom_bar(stat = "identity", position="fill") + 
@@ -195,6 +206,7 @@ Gender_by_district <- ggplot(voters %>% count(Districts, Genders), aes(x = Distr
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 Gender_by_district
 ```
+
 ```{r Gender by Party, echo=FALSE}
 Gender_by_party <- ggplot(voters %>% count(Party_Voting, Genders), aes(x = Party_Voting, y = n, fill = Genders)) + 
   geom_bar(stat = "identity", position="fill") + 
@@ -232,10 +244,9 @@ Stratified Random Sampling: A method of sampling that involves the division of a
 
 Link to Survey: https://docs.google.com/forms/d/e/1FAIpQLSeKtBfexOZDvcqszeNDH_dL5x3bkHHV4jNet4fdUS9Iv5-V3w/viewform?usp=sf_link
 
-\newpage
 Screenshots of the Survey: 
 
-```{r survey_pic1, echo=FALSE, out.width="100%"}
+```{r survey_pic1, echo=FALSE}
 knitr::include_graphics("Screenshot 2020-10-06 022653.png")
 ```
 
